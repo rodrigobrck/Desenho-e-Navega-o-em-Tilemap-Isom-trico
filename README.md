@@ -11,7 +11,7 @@
 | Tecla | Ação |
 |-------|------|
 | **Setas** ou **W A S D** | Norte, Oeste, Sul, Leste |
-| **AS, AW, SD, SW** Move nas diagonais
+| **AS, AW, SD, SW** | Move nas diagonais
 | **TAB** | Alterna o tile da célula visitada (0→6→0) — modo **Editor** |
 | **F1** | Liga/desliga **modo debug** (coordenadas `i,j` e tile id em cada célula) |
 | **ESC** | Sair |
@@ -52,7 +52,7 @@ Mapeamento dos tiles do mapa (0 a 6):
 | 3 | Areia |
 | 4 | Água |
 | 5 | Barro |
-| 6 | Rosa — marcador da célula visitada |
+| 6 | Floresta |
 
 ## Projeção e desenho
 
