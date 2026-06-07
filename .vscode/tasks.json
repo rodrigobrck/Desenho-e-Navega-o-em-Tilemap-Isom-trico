@@ -1,0 +1,89 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-mingw",
+      "dependsOn": "prepare-build-folder",
+      "dependsOrder": "sequence",
+      "type": "shell",
+      "command": "C:/msys64/mingw64/bin/g++.exe",
+      "args": [
+        "-g",
+        "-std=c++17",
+        "src/main.cpp",
+        "src/shader.cpp",
+        "src/texture.cpp",
+        "src/spritesheet.cpp",
+        "src/tilemap.cpp",
+        "src/input.cpp",
+        "src/debug_text.cpp",
+        "external/glad/src/glad.c",
+        "-I",
+        "src",
+        "-I",
+        "external/glad/include",
+        "-I",
+        "external/GLFW/include",
+        "-I",
+        "external/stb",
+        "-L",
+        "C:/msys64/mingw64/lib",
+        "-lglfw3",
+        "-lopengl32",
+        "-lgdi32",
+        "-lwinmm",
+        "-o",
+        "build-debug/staggered_map.exe"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "run-mingw",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "& .\\build-debug\\staggered_map.exe"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "dependsOn": "build-mingw",
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "prepare-build-folder",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "New-Item -ItemType Directory -Force build-debug | Out-Null"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

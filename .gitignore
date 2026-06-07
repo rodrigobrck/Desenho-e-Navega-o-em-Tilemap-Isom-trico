@@ -1,12 +1,8 @@
-build/
-build-debug/
 out/
 .vs/
-.vscode/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-*.exe
 *.obj
 *.o
 *.pdb
