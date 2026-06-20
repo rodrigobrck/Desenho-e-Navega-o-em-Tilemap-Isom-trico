@@ -10,6 +10,8 @@
 #include <random>
 #include <vector>
 
+// Copia para o Tilemap os dados ja validados pelo leitor de mapa e posiciona o
+// jogador no centro da grade, olhando para o sul.
 void Tilemap::adopt(const MapData& data) {
     tilesetName = data.tilesetName;
     tileCount = data.tileCount;
@@ -26,6 +28,7 @@ void Tilemap::adopt(const MapData& data) {
 Tilemap::Tilemap() {
 }
 
+// Le o arquivo de mapa do disco e, se der certo, adota seus dados.
 bool Tilemap::loadFromFile(const std::string& path) {
     MapData data;
     if (!loadMapFile(path, data)) {
@@ -39,6 +42,7 @@ void Tilemap::setTileSheet(const SpriteSheet* sheet) {
     tileset.setSheet(sheet);
 }
 
+// Acesso ao tile em (row, col): a grade e guardada num vetor linear (row-major).
 int& Tilemap::at(int row, int col) {
     return map[row * cols + col];
 }
@@ -51,6 +55,9 @@ bool Tilemap::inBounds(int row, int col) const {
     return row >= 0 && row < rows && col >= 0 && col < cols;
 }
 
+// Calcula a celula vizinha numa direcao. Por ser um mapa staggered, as linhas
+// impares ficam meio tile deslocadas, entao as diagonais dependem da paridade da
+// linha atual (i_even) para escolher a coluna certa.
 GridPos Tilemap::offsetForDirection(Direction dir) const {
     const int i = player.row;
     const int j = player.col;
@@ -74,6 +81,7 @@ GridPos Tilemap::neighbor(Direction dir) const {
     return offsetForDirection(dir);
 }
 
+// Pode mover para a direcao? So se o vizinho existir e for um terreno caminhavel.
 bool Tilemap::canMove(Direction dir) const {
     GridPos next = neighbor(dir);
     if (!inBounds(next.row, next.col)) {
@@ -83,6 +91,8 @@ bool Tilemap::canMove(Direction dir) const {
     return tileset.isWalkable(at(next.row, next.col));
 }
 
+// Tenta mover o jogador: vira o personagem para a direcao e o reposiciona se o
+// movimento for permitido. Devolve 'false' se estiver bloqueado.
 bool Tilemap::move(Direction dir) {
     if (!canMove(dir)) {
         return false;
@@ -93,6 +103,8 @@ bool Tilemap::move(Direction dir) {
     return true;
 }
 
+// Quando um movimento e bloqueado por terreno, devolve o nome desse terreno (para
+// mensagens); devolve nullptr se o bloqueio foi por sair do mapa ou se nao houve.
 const char* Tilemap::blockedReason(Direction dir) const {
     GridPos next = neighbor(dir);
     if (inBounds(next.row, next.col) && !tileset.isWalkable(at(next.row, next.col))) {
@@ -109,6 +121,8 @@ Tilemap::GameMode Tilemap::gameMode() const {
     return mode_;
 }
 
+// Modo Puzzle: "evolui" o tile visitado para o proximo terreno, sem passar do
+// ultimo (nao da a volta, ao contrario de cycleTile).
 void Tilemap::visitTile(int row, int col) {
     if (!inBounds(row, col)) return;
     int& t = at(row, col);
@@ -117,12 +131,16 @@ void Tilemap::visitTile(int row, int col) {
     }
 }
 
+// Troca o tile sob o jogador pelo proximo do tileset, dando a volta no fim (TAB).
 void Tilemap::cycleTile() {
     int& tile = at(player.row, player.col);
     tile = (tile + 1) % tileCount;
 }
 
+// Sorteia um tile caminhavel qualquer (exceto a celula 'exclude'), usado para
+// reposicionar o alvo do Pega-Pega longe do jogador.
 GridPos Tilemap::randomWalkableTile(GridPos exclude) const {
+    // Junta todos os tiles caminhaveis candidatos.
     std::vector<GridPos> candidates;
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
@@ -132,15 +150,18 @@ GridPos Tilemap::randomWalkableTile(GridPos exclude) const {
     }
     if (candidates.empty()) return exclude;
 
+    // Escolhe um candidato ao acaso (gerador criado uma unica vez).
     static std::mt19937 rng(std::random_device{}());
     std::uniform_int_distribution<size_t> dist(0, candidates.size() - 1);
     return candidates[dist(rng)];
 }
 
+// Monta o objeto IsoGrid (a matematica de posicionamento) para as dimensoes atuais.
 IsoGrid Tilemap::grid() const {
     return IsoGrid{rows, cols, TILE_W, TILE_H, SCREEN_W, SCREEN_H};
 }
 
+// Converte uma celula (row, col) na sua posicao (x, y) na tela.
 void Tilemap::getTileScreenPos(int row, int col, float& x, float& y) const {
     grid().tileScreenPos(row, col, x, y);
 }

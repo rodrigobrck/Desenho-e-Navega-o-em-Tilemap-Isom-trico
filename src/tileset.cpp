@@ -12,6 +12,8 @@ void TileSet::setWalkable(const std::vector<bool>& mask) {
     walkable_ = mask;
 }
 
+// Converte o id de um tile no recorte do spritesheet: a coluna e o resto e a linha
+// e o quociente da divisao pelo numero de colunas (varredura linha a linha).
 TileSpriteRef TileSet::spriteRef(int tileId) const {
     if (!sheet_ || sheet_->cols <= 0) {
         return {sheet_, 0, 0};
@@ -19,6 +21,8 @@ TileSpriteRef TileSet::spriteRef(int tileId) const {
     return {sheet_, tileId % sheet_->cols, tileId / sheet_->cols};
 }
 
+// O terreno e caminhavel? Sem mascara definida, tudo e caminhavel; com mascara, um
+// id fora do intervalo conta como nao caminhavel.
 bool TileSet::isWalkable(int tileId) const {
     if (walkable_.empty()) {
         return true;
@@ -29,6 +33,7 @@ bool TileSet::isWalkable(int tileId) const {
     return walkable_[tileId];
 }
 
+// Nome amigavel de cada tipo de terreno (usado nas mensagens de bloqueio).
 const char* TileSet::name(int tileId) {
     switch (tileId) {
         case 0: return "terra";

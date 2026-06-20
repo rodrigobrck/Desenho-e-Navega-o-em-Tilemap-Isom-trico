@@ -8,9 +8,13 @@
 #include <limits>
 
 namespace {
+// Folga vertical extra para o mapa nao colar no topo da janela.
 constexpr float VERTICAL_PADDING = 20.0f;
 }
 
+// Calcula a caixa que envolve todos os tiles (sem offset de centralizacao),
+// varrendo a grade e guardando os extremos das posicoes. As linhas impares somam
+// meio tile em X (deslocamento staggered) e cada linha desce so meia altura.
 void IsoGrid::bounds(float& minX, float& minY, float& maxX, float& maxY) const {
     const float halfW = tileW * 0.5f;
     const float halfH = tileH * 0.5f;
@@ -30,6 +34,7 @@ void IsoGrid::bounds(float& minX, float& minY, float& maxX, float& maxY) const {
     }
 }
 
+// Deslocamento horizontal que centraliza o mapa na largura da janela.
 float IsoGrid::offsetX() const {
     float minX, minY, maxX, maxY;
     bounds(minX, minY, maxX, maxY);
@@ -37,6 +42,7 @@ float IsoGrid::offsetX() const {
     return (screenW - mapW) * 0.5f - minX;
 }
 
+// Deslocamento vertical que centraliza o mapa na altura, com a folga do topo.
 float IsoGrid::offsetY() const {
     float minX, minY, maxX, maxY;
     bounds(minX, minY, maxX, maxY);
@@ -44,18 +50,22 @@ float IsoGrid::offsetY() const {
     return (screenH - mapH) * 0.5f - minY + VERTICAL_PADDING;
 }
 
+// Largura total ocupada pelo mapa (extensao em X mais um tile).
 float IsoGrid::mapWidth() const {
     float minX, minY, maxX, maxY;
     bounds(minX, minY, maxX, maxY);
     return (maxX - minX) + static_cast<float>(tileW);
 }
 
+// Altura total ocupada pelo mapa (extensao em Y mais um tile).
 float IsoGrid::mapHeight() const {
     float minX, minY, maxX, maxY;
     bounds(minX, minY, maxX, maxY);
     return (maxY - minY) + static_cast<float>(tileH);
 }
 
+// Converte uma celula (row, col) na posicao (x, y) do canto superior esquerdo do
+// tile na tela, ja com a centralizacao e o deslocamento staggered das linhas impares.
 void IsoGrid::tileScreenPos(int row, int col, float& x, float& y) const {
     const float halfW = tileW * 0.5f;
     const float halfH = tileH * 0.5f;

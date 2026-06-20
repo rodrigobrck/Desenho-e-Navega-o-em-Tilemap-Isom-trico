@@ -9,6 +9,9 @@
 
 #include <cstdio>
 
+// Inicia uma partida: configura o NPC (com uma paleta de cor diferente do jogador),
+// sorteia a primeira posicao do alvo, zera o placar/cronometro e poe o mapa no modo
+// Pega-Pega.
 void PegaPega::start(Tilemap& map) {
     npc.setSheet(map.character.sheet());
     npc.setPaletteRow(Character::DEFAULT_PALETTE_ROW + Character::PALETTE_BLOCK_ROWS);
@@ -22,6 +25,7 @@ void PegaPega::start(Tilemap& map) {
     map.setGameMode(Tilemap::GameMode::PegaPega);
 }
 
+// Avanca o cronometro a cada quadro; se o tempo zerar, o jogador perde.
 void PegaPega::update(double dt) {
     if (status_ != Status::Running) {
         return;
@@ -33,10 +37,14 @@ void PegaPega::update(double dt) {
     }
 }
 
+// Chamado quando o jogador anda. Se ele caiu sobre o alvo, conta uma captura, da
+// o bonus de tempo e ou vence (atingiu a meta) ou sorteia uma nova posicao do alvo.
+// Devolve 'true' apenas quando houve captura.
 bool PegaPega::onPlayerMoved(Tilemap& map) {
     if (status_ != Status::Running) {
         return false;
     }
+    // So conta se o jogador estiver exatamente na celula do alvo.
     if (map.player.row != position_.row || map.player.col != position_.col) {
         return false;
     }
@@ -71,6 +79,8 @@ GridPos PegaPega::position() const {
     return position_;
 }
 
+// Monta a linha de texto do HUD conforme o estado: vitoria, fim de jogo ou a
+// partida em andamento (mostrando capturas e tempo restante).
 std::string PegaPega::hudText() const {
     char buffer[160];
     if (status_ == Status::Won) {

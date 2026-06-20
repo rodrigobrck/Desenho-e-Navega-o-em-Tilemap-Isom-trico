@@ -6,17 +6,21 @@
 
 #include <iostream>
 
+// Libera o programa de shader da GPU quando o objeto e destruido.
 Shader::~Shader() {
     if (program != 0) {
         glDeleteProgram(program);
     }
 }
 
+// Compila um shader (vertice ou fragmento) a partir do codigo-fonte. Em caso de
+// erro, imprime o log de compilacao e devolve 0.
 GLuint Shader::compile(GLenum type, const char* source) {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
 
+    // Verifica se a compilacao deu certo.
     GLint success = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -30,7 +34,10 @@ GLuint Shader::compile(GLenum type, const char* source) {
     return shader;
 }
 
+// Compila os dois shaders e os liga num unico programa de GPU pronto para uso.
+// Devolve 'false' se a compilacao ou a ligacao falhar.
 bool Shader::loadFromSource(const char* vertexSrc, const char* fragmentSrc) {
+    // Compila os shaders de vertice e de fragmento.
     GLuint vertex = compile(GL_VERTEX_SHADER, vertexSrc);
     GLuint fragment = compile(GL_FRAGMENT_SHADER, fragmentSrc);
     if (vertex == 0 || fragment == 0) {
@@ -39,14 +46,17 @@ bool Shader::loadFromSource(const char* vertexSrc, const char* fragmentSrc) {
         return false;
     }
 
+    // Liga os dois shaders no programa final.
     program = glCreateProgram();
     glAttachShader(program, vertex);
     glAttachShader(program, fragment);
     glLinkProgram(program);
 
+    // Os shaders ja podem ser descartados depois de ligados ao programa.
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
+    // Verifica se a ligacao deu certo.
     GLint success = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &success);
     if (!success) {
@@ -61,10 +71,13 @@ bool Shader::loadFromSource(const char* vertexSrc, const char* fragmentSrc) {
     return true;
 }
 
+// Ativa este programa para os proximos comandos de desenho.
 void Shader::use() const {
     glUseProgram(program);
 }
 
+// Atalhos para enviar uniforms (variaveis do shader): uma matriz 4x4, um vec2 e um
+// inteiro, respectivamente.
 void Shader::setMat4(const char* name, const float* value) const {
     glUniformMatrix4fv(glGetUniformLocation(program, name), 1, GL_FALSE, value);
 }
