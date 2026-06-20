@@ -1,0 +1,24 @@
+# Mapa isometrico staggered - arquivo de configuracao
+# Linha 1: <tileset> <qtd_tiles> <largura_tile> <altura_tile>  (em pixels, na imagem)
+# Linha 2: <linhas> <colunas>
+# Demais linhas: a grade com os indices dos tiles (0..qtd_tiles-1)
+#   0=terra 1=grama 2=pedra 3=areia 4=agua 5=barro 6=floresta
+# Linhas iniciadas por '#' e linhas em branco sao ignoradas no cabecalho.
+Overworld_7Terrain_Tileset.png 7 256 128
+walkable 0 1 2 3 5
+15 15
+3 3 1 1 1 1 1 1 3 3 1 2 1 1 4
+3 1 1 1 1 1 1 1 1 3 1 2 1 1 4
+1 1 1 1 5 5 1 1 1 1 1 2 1 1 4
+1 1 6 6 1 1 6 6 1 1 1 2 1 1 4
+1 1 4 4 4 4 4 4 1 1 1 2 1 1 4
+1 1 4 4 4 4 4 4 1 1 1 2 1 1 4
+1 1 1 1 1 1 1 1 1 1 1 2 1 1 4
+1 1 1 1 1 1 1 1 1 1 1 2 1 1 4
+1 1 1 2 2 2 1 1 1 1 1 2 1 1 4
+1 1 1 2 2 2 1 1 1 1 1 2 1 1 4
+5 5 1 1 1 1 1 1 5 5 1 2 1 1 4
+1 1 1 1 1 1 1 1 1 1 1 2 1 1 4
+6 6 6 1 1 1 1 6 6 6 1 2 1 1 4
+1 1 1 1 1 1 1 1 1 1 1 2 1 1 4
+1 2 2 2 1 1 2 2 2 1 1 2 1 1 4

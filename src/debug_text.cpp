@@ -38,7 +38,7 @@ void main() {
     FragColor = vColor;
 }
 )";
-} // namespace
+}
 
 bool DebugText::init() {
     if (!shader_.loadFromSource(VERTEX_SHADER, FRAGMENT_SHADER)) {
@@ -52,6 +52,17 @@ bool DebugText::init() {
 
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    glGenVertexArrays(1, &hudVao_);
+    glGenBuffers(1, &hudVbo_);
+
+    glBindVertexArray(hudVao_);
+    glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)(2 * sizeof(float)));
@@ -107,9 +118,9 @@ void DebugText::buildTileLabels(const Tilemap& map) {
             std::snprintf(label, sizeof(label), "%d,%d [%d]", i, j, tileId);
 
             const bool isPlayer = (i == map.player.row && j == map.player.col);
-            const bool walkable = Tilemap::isWalkable(tileId);
+            const bool walkable = map.tileset.isWalkable(tileId);
 
-            unsigned char cr = isPlayer ? 255 : (walkable ? 255 : 255);
+            unsigned char cr = 255;
             unsigned char cg = isPlayer ? 255 : (walkable ? 255 : 120);
             unsigned char cb = isPlayer ? 80  : (walkable ? 255 : 120);
 
@@ -130,15 +141,41 @@ void DebugText::buildTileLabels(const Tilemap& map) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void DebugText::draw(const float projection[16]) const {
-    if (!enabled_ || vertexCount_ <= 0) {
+void DebugText::setHud(const std::string& text) {
+    std::vector<ColorVertex> vertices;
+    appendText(10.0f, 10.0f, text.c_str(), 255, 235, 90, 255, 1.6f, vertices);
+
+    hudVertexCount_ = static_cast<int>(vertices.size());
+
+    glBindBuffer(GL_ARRAY_BUFFER, hudVbo_);
+    glBufferData(GL_ARRAY_BUFFER,
+                 static_cast<GLsizeiptr>(vertices.size() * sizeof(ColorVertex)),
+                 vertices.data(), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void DebugText::clearHud() {
+    hudVertexCount_ = 0;
+}
+
+void DebugText::draw(const float worldProjection[16], const float screenProjection[16]) const {
+    const bool drawLabels = enabled_ && vertexCount_ > 0;
+    const bool drawHud = hudVertexCount_ > 0;
+    if (!drawLabels && !drawHud) {
         return;
     }
 
     shader_.use();
-    shader_.setMat4("uProjection", projection);
 
-    glBindVertexArray(vao_);
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount_);
+    if (drawLabels) {
+        shader_.setMat4("uProjection", worldProjection);
+        glBindVertexArray(vao_);
+        glDrawArrays(GL_TRIANGLES, 0, vertexCount_);
+    }
+    if (drawHud) {
+        shader_.setMat4("uProjection", screenProjection);
+        glBindVertexArray(hudVao_);
+        glDrawArrays(GL_TRIANGLES, 0, hudVertexCount_);
+    }
     glBindVertexArray(0);
 }

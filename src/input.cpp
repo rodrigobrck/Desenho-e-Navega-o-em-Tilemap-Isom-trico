@@ -14,7 +14,6 @@ InputManager::InputManager() {
 }
 
 void InputManager::onKey(int key, int scancode, int action, int mods) {
-    // movement keys: maintain pressed state and timestamp
     auto it = moves.find(key);
     if (it != moves.end()) {
         int beforeCount = 0;
@@ -55,6 +54,10 @@ InputAction InputManager::handleNonMovementKey(int key, int action) const {
     if (key == GLFW_KEY_TAB && action == GLFW_PRESS) return InputAction::CycleTile;
     if (key == GLFW_KEY_F1 && action == GLFW_PRESS) return InputAction::ToggleDebug;
     if (key == GLFW_KEY_Y && action == GLFW_PRESS) return InputAction::ToggleMode;
+    if (key == GLFW_KEY_M && action == GLFW_PRESS) return InputAction::ToggleSubmode;
+    if (key == GLFW_KEY_P && action == GLFW_PRESS) return InputAction::StartPegaPega;
+    if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS) return InputAction::EditorNext;
+    if (key == GLFW_KEY_LEFT && action == GLFW_PRESS) return InputAction::EditorPrev;
     return InputAction::None;
 }
 
@@ -75,7 +78,6 @@ bool InputManager::pickMovement(Direction& out, double deadzone) {
             pressedMoves.emplace_back(k, kv.second);
         }
     }
-    // if no movement keys pressed, nothing to do
     if (pressedMoves.empty()) return false;
 
     int vertKey = 0, horKey = 0;
@@ -102,7 +104,6 @@ bool InputManager::pickMovement(Direction& out, double deadzone) {
         }
     }
 
-    // If we've already moved for the current press cycle, don't move again
     if (movedForCurrentPress) return false;
 
     double now = glfwGetTime();
@@ -113,7 +114,6 @@ bool InputManager::pickMovement(Direction& out, double deadzone) {
             shouldCommit = true;
         }
     } else {
-        // if not pending (edge cases), commit immediately
         shouldCommit = true;
     }
 
