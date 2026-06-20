@@ -92,7 +92,7 @@ bool Renderer::init(const std::string& mapFile) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    if (!debug.init()) {
+    if (!hud.init()) {
         return false;
     }
 
@@ -151,9 +151,6 @@ void Renderer::buildBatches() {
 
 void Renderer::uploadMesh() {
     buildBatches();
-    if (debug.isEnabled()) {
-        debug.buildTileLabels(map);
-    }
 }
 
 void Renderer::draw() {
@@ -212,7 +209,7 @@ void Renderer::draw() {
 
     glBindVertexArray(0);
 
-    debug.draw(worldProj, screenProj);
+    hud.draw(screenProj);
 }
 
 Renderer::~Renderer() {

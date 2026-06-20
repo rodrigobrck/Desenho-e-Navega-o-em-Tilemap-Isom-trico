@@ -25,7 +25,7 @@
         "src/character.cpp",
         "src/pegapega.cpp",
         "src/input.cpp",
-        "src/debug_text.cpp",
+        "src/hud.cpp",
         "external/glad/src/glad.c",
         "-I",
         "include",

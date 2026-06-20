@@ -52,7 +52,6 @@ void InputManager::onKey(int key, int scancode, int action, int mods) {
 InputAction InputManager::handleNonMovementKey(int key, int action) const {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) return InputAction::Quit;
     if (key == GLFW_KEY_TAB && action == GLFW_PRESS) return InputAction::CycleTile;
-    if (key == GLFW_KEY_F1 && action == GLFW_PRESS) return InputAction::ToggleDebug;
     if (key == GLFW_KEY_Y && action == GLFW_PRESS) return InputAction::ToggleMode;
     if (key == GLFW_KEY_M && action == GLFW_PRESS) return InputAction::ToggleSubmode;
     if (key == GLFW_KEY_P && action == GLFW_PRESS) return InputAction::StartPegaPega;

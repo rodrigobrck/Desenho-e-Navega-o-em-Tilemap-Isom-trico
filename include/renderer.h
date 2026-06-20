@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "debug_text.h"
+#include "hud.h"
 #include "pegapega.h"
 #include "screen.h"
 #include "shader.h"
@@ -18,7 +18,7 @@ public:
     SpriteSheet character;
 
     Tilemap map;
-    DebugText debug;
+    Hud hud;
 
     bool init(const std::string& mapFile);
     void setPegaPega(const PegaPega* pega);

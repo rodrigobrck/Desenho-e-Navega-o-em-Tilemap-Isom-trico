@@ -1,0 +1,122 @@
+#include "hud.h"
+
+#define STB_EASY_FONT_IMPLEMENTATION
+#include <stb_easy_font.h>
+
+#include <vector>
+
+namespace {
+constexpr float HUD_SCALE = 1.6f;
+
+struct ColorVertex {
+    float x, y;
+    float r, g, b, a;
+};
+
+const char* VERTEX_SHADER = R"(
+#version 330 core
+layout(location = 0) in vec2 aPos;
+layout(location = 1) in vec4 aColor;
+
+uniform mat4 uProjection;
+
+out vec4 vColor;
+
+void main() {
+    vColor = aColor;
+    gl_Position = uProjection * vec4(aPos, 0.0, 1.0);
+}
+)";
+
+const char* FRAGMENT_SHADER = R"(
+#version 330 core
+in vec4 vColor;
+out vec4 FragColor;
+
+void main() {
+    FragColor = vColor;
+}
+)";
+
+void appendText(float x, float y, const char* text,
+                unsigned char r, unsigned char g, unsigned char b, unsigned char a,
+                float scale, std::vector<ColorVertex>& out) {
+    unsigned char color[4] = {r, g, b, a};
+    float buffer[4096];
+    const int quads = stb_easy_font_print(0.0f, 0.0f, const_cast<char*>(text), color, buffer, sizeof(buffer));
+
+    for (int q = 0; q < quads; ++q) {
+        const float* quad = buffer + q * 16;
+        const float tri[6][2] = {
+            {quad[0], quad[1]}, {quad[4], quad[5]}, {quad[8], quad[9]},
+            {quad[0], quad[1]}, {quad[8], quad[9]}, {quad[12], quad[13]},
+        };
+
+        for (const auto& v : tri) {
+            ColorVertex cv;
+            cv.x = x + v[0] * scale;
+            cv.y = y + v[1] * scale;
+            cv.r = r / 255.0f;
+            cv.g = g / 255.0f;
+            cv.b = b / 255.0f;
+            cv.a = a / 255.0f;
+            out.push_back(cv);
+        }
+    }
+}
+}
+
+bool Hud::init() {
+    if (!shader_.loadFromSource(VERTEX_SHADER, FRAGMENT_SHADER)) {
+        return false;
+    }
+
+    stb_easy_font_spacing(0.5f);
+
+    glGenVertexArrays(1, &vao_);
+    glGenBuffers(1, &vbo_);
+
+    glBindVertexArray(vao_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(ColorVertex), (void*)(2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glBindVertexArray(0);
+
+    return true;
+}
+
+void Hud::setText(const std::string& text) {
+    std::vector<ColorVertex> vertices;
+    appendText(10.0f, 10.0f, text.c_str(), 255, 235, 90, 255, HUD_SCALE, vertices);
+
+    vertexCount_ = static_cast<int>(vertices.size());
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+    glBufferData(GL_ARRAY_BUFFER,
+                 static_cast<GLsizeiptr>(vertices.size() * sizeof(ColorVertex)),
+                 vertices.data(), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Hud::clear() {
+    vertexCount_ = 0;
+}
+
+void Hud::draw(const float screenProjection[16]) const {
+    if (vertexCount_ <= 0) {
+        return;
+    }
+
+    shader_.use();
+    shader_.setMat4("uProjection", screenProjection);
+    glBindVertexArray(vao_);
+    glDrawArrays(GL_TRIANGLES, 0, vertexCount_);
+    glBindVertexArray(0);
+}
+
+Hud::~Hud() {
+    if (vbo_) glDeleteBuffers(1, &vbo_);
+    if (vao_) glDeleteVertexArrays(1, &vao_);
+}

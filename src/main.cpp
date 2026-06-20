@@ -69,7 +69,6 @@ int main(int argc, char** argv) {
               << "M: alternar Editor <-> Puzzle\n"
               << "TAB: alternar (ciclar) o tile da celula atual\n"
               << "P: iniciar o modo Pega-Pega\n"
-              << "F1: modo debug (coordenadas nos tiles)\n"
               << "ESC: sair\n";
 
     AppState appState;
@@ -94,13 +93,6 @@ int main(int argc, char** argv) {
             case InputAction::CycleTile:
                 r->map.cycleTile();
                 r->uploadMesh();
-                return;
-            case InputAction::ToggleDebug:
-                r->debug.toggle();
-                std::cout << "Debug: " << (r->debug.isEnabled() ? "ON" : "OFF") << '\n';
-                if (r->debug.isEnabled()) {
-                    r->debug.buildTileLabels(r->map);
-                }
                 return;
             case InputAction::ToggleMode:
                 if (r->map.gameMode() == Tilemap::GameMode::Navigation) {
@@ -161,9 +153,9 @@ int main(int argc, char** argv) {
         if (renderer.map.gameMode() == Tilemap::GameMode::PegaPega) {
             appState.pega.update(dt);
             renderer.uploadMesh();
-            renderer.debug.setHud(appState.pega.hudText());
+            renderer.hud.setText(appState.pega.hudText());
         } else {
-            renderer.debug.clearHud();
+            renderer.hud.clear();
         }
 
         Direction chosen;

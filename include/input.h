@@ -7,7 +7,6 @@ enum class InputAction {
     None,
     Quit,
     CycleTile,
-    ToggleDebug,
     ToggleMode,
     ToggleSubmode,
     StartPegaPega,
