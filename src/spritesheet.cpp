@@ -50,13 +50,10 @@ bool SpriteSheet::loadAuto(const std::string& path, int tileWidth, int tileHeigh
 }
 
 void SpriteSheet::uvRect(int col, int row, float& u0, float& v0, float& u1, float& v1) const {
-    const float tw = static_cast<float>(texture.width) / static_cast<float>(cols);
-    const float th = static_cast<float>(texture.height) / static_cast<float>(rows);
-
-    u0 = (col * tw) / static_cast<float>(texture.width);
-    u1 = ((col + 1) * tw) / static_cast<float>(texture.width);
-    v0 = (row * th) / static_cast<float>(texture.height);
-    v1 = ((row + 1) * th) / static_cast<float>(texture.height);
+    u0 = static_cast<float>(col) / static_cast<float>(cols);
+    u1 = static_cast<float>(col + 1) / static_cast<float>(cols);
+    v0 = static_cast<float>(row) / static_cast<float>(rows);
+    v1 = static_cast<float>(row + 1) / static_cast<float>(rows);
 }
 
 void SpriteSheet::addSprite(std::vector<SpriteVertex>& out,
@@ -68,13 +65,18 @@ void SpriteSheet::addSprite(std::vector<SpriteVertex>& out,
     const float w = static_cast<float>(tileW) * scaleX;
     const float h = static_cast<float>(tileH) * scaleY;
 
-    out.push_back({x,     y,     u0, v0});
-    out.push_back({x + w, y,     u1, v0});
-    out.push_back({x + w, y + h, u1, v1});
+    const SpriteVertex topLeft {x, y, u0, v0};
+    const SpriteVertex topRight {x + w, y, u1, v0};
+    const SpriteVertex bottomRight {x + w, y + h, u1, v1};
+    const SpriteVertex bottomLeft {x, y + h, u0, v1};
 
-    out.push_back({x,     y,     u0, v0});
-    out.push_back({x + w, y + h, u1, v1});
-    out.push_back({x,     y + h, u0, v1});
+    out.push_back(topLeft);
+    out.push_back(topRight);
+    out.push_back(bottomRight);
+
+    out.push_back(topLeft);
+    out.push_back(bottomRight);
+    out.push_back(bottomLeft);
 }
 
 void addSpriteToBatches(std::vector<DrawBatch>& batches, const SpriteSheet* sheet,

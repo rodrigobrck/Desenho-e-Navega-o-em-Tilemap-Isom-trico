@@ -50,7 +50,7 @@ void Character::appendSprite(std::vector<DrawBatch>& batches,
     }
 
     const int col = directionToColumn(facing_);
-    const int row = paletteRow_ + 1 + idleFrame_;
+    const int row = paletteRow_ + IDLE_ROW_OFFSET + idleFrame_;
     const float w = static_cast<float>(sheet_->tileW) * CHAR_SCALE;
     const float h = static_cast<float>(sheet_->tileH) * CHAR_SCALE;
     const float x = tileX + (tileW - w) * 0.5f;

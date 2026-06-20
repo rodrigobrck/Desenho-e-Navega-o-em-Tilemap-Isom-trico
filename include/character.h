@@ -6,6 +6,7 @@
 class Character {
 public:
     static constexpr int IDLE_FRAME_COUNT = 3;
+    static constexpr int IDLE_ROW_OFFSET = 1;
     static constexpr int DEFAULT_PALETTE_ROW = 4;
     static constexpr int PALETTE_BLOCK_ROWS = 4;
 
