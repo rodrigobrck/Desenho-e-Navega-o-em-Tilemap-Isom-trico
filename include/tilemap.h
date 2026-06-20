@@ -1,3 +1,7 @@
+// tilemap.h
+// Contrato do Tilemap: o estado logico do mapa (a grade de tiles, a posicao do
+// jogador e o modo de jogo) e as operacoes de movimento, que decidem se o
+// jogador pode andar para um tile e tratam a paridade das linhas no staggered.
 #pragma once
 
 #include "character.h"

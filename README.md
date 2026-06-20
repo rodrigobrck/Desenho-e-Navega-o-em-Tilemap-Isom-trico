@@ -6,6 +6,7 @@ Trabalho desenvolvido para a disciplina **Processamento Gráfico**.
 
 - Rodrigo Brocker Nunes
 - João Miguel Junges Oliveira
+- Arthur Zani Lemos
 
 ## 🚀 Como executar
 

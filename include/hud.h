@@ -1,3 +1,6 @@
+// hud.h
+// Contrato do Hud: desenhar texto na tela (o placar e o cronometro do
+// Pega-Pega), por cima da cena do jogo.
 #pragma once
 
 #include <glad/glad.h>

@@ -1,3 +1,8 @@
+// isogrid.cpp
+// Coracao do visual isometrico: calcula a posicao de cada tile na tela. As
+// linhas impares deslocam meio tile na horizontal e cada linha desce so metade
+// da altura, o que cria a profundidade staggered. Tambem centraliza o mapa na
+// janela calculando os limites (bounds) da grade.
 #include "isogrid.h"
 
 #include <limits>

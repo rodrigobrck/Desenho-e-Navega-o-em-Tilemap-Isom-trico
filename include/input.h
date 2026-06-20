@@ -1,3 +1,7 @@
+// input.h
+// Contrato do InputManager: define o enum InputAction (sair, ciclar tile, trocar
+// de modo, iniciar Pega-Pega) e as funcoes que interpretam o teclado, inclusive
+// a combinacao de duas teclas numa direcao diagonal.
 #pragma once
 
 #include <unordered_map>

@@ -1,3 +1,7 @@
+// hud.cpp
+// Desenha o texto do placar e do cronometro na tela, usando a stb_easy_font para
+// gerar a geometria das letras. Tem seu proprio shader simples (cor solida) e
+// desenha por cima da cena, em coordenadas de tela.
 #include "hud.h"
 
 #define STB_EASY_FONT_IMPLEMENTATION

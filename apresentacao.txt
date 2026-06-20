@@ -1,0 +1,243 @@
+================================================================================
+  ROTEIRO DE APRESENTAÇÃO (5 MINUTOS) — MAPA ISOMÉTRICO STAGGERED (OpenGL + C++)
+  Disciplina: Processamento Gráfico
+  Apresentadores: Miguel  |  Arthur  |  Rodrigo
+================================================================================
+
+OBJETIVO DESTE ROTEIRO
+- Foco em DECISÕES e ENTENDIMENTO, não em ler código linha a linha.
+- Cada fala responde "POR QUE fizemos assim", não "o que esta variável guarda".
+- Temas centrais: TEXTURAS, MOVIMENTAÇÃO DO PERSONAGEM e OBJETIVOS (lógica simples).
+- Tempo: ~1min40 por integrante. Deixe o jogo JÁ COMPILADO e aberto antes de começar.
+- [TELA] = o que mostrar na projeção; [DEMO] = ação ao vivo no jogo.
+
+RESUMO DE TEMPO
+  0:00 - 1:40   MIGUEL  — Proposta, organização do projeto e tecnologias
+  1:40 - 3:20   ARTHUR  — Texturas e a lógica do mapa
+  3:20 - 5:00   RODRIGO — Movimentação do personagem e objetivos do jogo
+
+
+================================================================================
+BLOCO 1 — MIGUEL  (Proposta, organização e tecnologias)  ~1min40
+================================================================================
+
+[TELA: jogo rodando com o mapa isométrico e o personagem.]
+
+"Boa tarde. Nosso projeto desenha um mapa isométrico em C++ com OpenGL e deixa um
+personagem caminhar por ele em 8 direções. ."
+
+[TELA: pastas include/ e src/ lado a lado.]
+
+"Sobre a organização do código: separamos em include/ e src/. Que são as interfaces 
+e as implementações. o Tilemap cuida da lógica do mapa, o IsoGrid da matemática 
+da projeção, o Character do personagem e o Renderer do desenho. Assim, mexer numa 
+parte não quebra as outras."
+
+[TELA: pasta external/ (glad, GLFW, stb).]
+
+================================================================================
+BLOCO 2 — ARTHUR  (Texturas e a lógica do mapa)  ~1min40
+================================================================================
+
+[TELA: pasta Assets/ aberta — mostre Assets/Tiles/ e Assets/Character/.]
+
+"Todas as nossas texturas ficam na pasta Assets. Os terrenos estão em
+Assets/Tiles: são spritesheets de 256 por 128 pixels, com vários tipos de chão na
+mesma imagem — grama, água, areia, pedra. O personagem está em Assets/Character:
+um spritesheet com as 8 direções dele."
+
+"recortamos só o pedacinho que queremos pelas coordenadas de
+textura. Isso vale tanto para os tipos de terreno quanto para as poses do
+personagem."
+
+[TELA: jogo rodando; aponte o deslocamento das linhas ímpares.]
+
+"Sobre o mapa: escolhemos o layout isométrico STAGGERED, em que as linhas ímpares
+são empurradas meio tile para o lado. Por quê? Porque assim o mapa continua sendo
+uma MATRIZ simples de linha e coluna, fácil de guardar e de ler. O visual
+isométrico aparece só na hora de desenhar — quem traduz 'linha e coluna' para a
+posição na tela é a classe IsoGrid."
+
+[TELA: arquivo Assets/Maps/map_15x15.txt; depois DEMO rodando esse mapa.]
+
+"E o mapa não está fixo no código: ele é lido de um arquivo de TEXTO em
+Assets/Maps. Esse arquivo diz qual textura de tileset usar, quais terrenos são
+caminháveis e a grade de números. Por isso conseguimos criar mapas novos sem
+recompilar o jogo. Rodrigo, mostra o personagem se movendo e os objetivos."
+
+
+================================================================================
+BLOCO 3 — RODRIGO  (Movimentação do personagem e objetivos)  ~1min40
+================================================================================
+
+[DEMO: ande com WASD e setas; faça uma diagonal (cima+direita).]
+
+"A movimentação é em 8 DIREÇÕES — as quatro retas mais as diagonais, que saem ao
+combinar duas teclas. O detalhe interessante é que, num mapa staggered, o vizinho
+diagonal de uma célula muda conforme a linha é par ou ímpar; então a lógica de
+movimento precisa tratar essa diferença para o personagem andar certinho na
+grade."
+
+[DEMO: tente andar contra um tile de água e mostre que ele bloqueia.]
+
+"Repare que ele não anda na água. Essa é uma lógica simples e proposital: o
+arquivo do mapa marca quais terrenos são 'caminháveis', e antes de cada passo a
+gente checa se o destino é permitido. Isso evita que o personagem saia do mapa ou
+piso onde não deveria."
+
+"O personagem também sabe para onde está OLHANDO: como o spritesheet tem as 8
+direções, escolhemos o quadro certo conforme a direção do movimento, e ele tem
+uma pequena animação mesmo parado."
+
+[DEMO: pressione 'P' para iniciar o Pega-Pega; capture o alvo uma vez. Aponte o HUD.]
+
+"Por fim, os OBJETIVOS. Sobre essa base montamos três modos:
+ - Navegação, para andar livre pelo mapa;
+ - Puzzle, em que os tiles mudam conforme o jogador pisa neles;
+ - e o Pega-Pega, nosso mini-jogo: um alvo aparece num tile aleatório, e o objetivo
+   é alcançá-lo antes do tempo. Cada captura dá mais alguns segundos; chegando a 10
+   capturas você vence, se o tempo zera você perde. O placar aparece no HUD."
+
+"Resumindo: entregamos um mapa isométrico com texturas em spritesheet, um
+personagem que anda em 8 direções respeitando o terreno, e objetivos de jogo com
+uma lógica simples e clara. O maior desafio foi acertar a matemática do staggered
+na projeção e na navegação. Obrigado, estamos à disposição da banca."
+
+
+================================================================================
+  REFERÊNCIA — O QUE CADA ARQUIVO FAZ  (apoio para perguntas / slide extra)
+================================================================================
+Regra de ouro: a pasta include/ guarda os CABEÇALHOS (.h) — o "contrato" de cada
+classe, ou seja, O QUE ela oferece. A pasta src/ guarda os fontes (.cpp) — a
+implementação, ou seja, COMO cada coisa é feita. Em geral, cada .h tem um .cpp
+correspondente.
+
+------------------------------- include/ (.h) ----------------------------------
+
+types.h
+  Define os tipos básicos compartilhados por todo o projeto: o enum Direction (as
+  8 direções N, S, L, O e diagonais) e a struct GridPos (linha e coluna). Ficam
+  isolados aqui para qualquer classe usar sem depender das outras.
+
+screen.h
+  Guarda as constantes da janela (largura e altura, 1280x720). Centralizamos aqui
+  para não espalhar "números mágicos" pelo código.
+
+gfx_math.h
+  Pequena função matemática que monta a matriz de projeção ortográfica (orthoMat4).
+  É ela que mapeia nosso espaço 2D para o que o OpenGL espera desenhar na tela.
+
+texture.h
+  Contrato da classe Texture: carregar uma imagem e transformá-la numa textura de
+  GPU pronta para uso.
+
+shader.h
+  Contrato da classe Shader: compilar e usar os programas de shader do OpenGL.
+
+spritesheet.h
+  Define SpriteSheet (uma imagem com vários quadros) e as structs de desenho
+  (SpriteVertex e DrawBatch). É a base de como recortamos e agrupamos os sprites.
+  Junto com texture.h e shader.h, forma nossa "camada de baixo nível" do OpenGL —
+  o resto do jogo conversa com elas em vez de chamar o OpenGL diretamente.
+
+tileset.h
+  Contrato do TileSet: saber quais terrenos são caminháveis e onde cada tile está
+  no spritesheet.
+
+isogrid.h
+  Contrato do IsoGrid: a matemática que converte (linha, coluna) em posição na tela.
+
+maploader.h
+  Define a struct MapData e a função que lê o mapa de um arquivo de texto.
+
+character.h
+  Contrato do Character: a qual spritesheet ele pertence, para onde olha e qual
+  quadro de animação mostrar.
+
+tilemap.h
+  Contrato do Tilemap: o estado lógico do mapa (grade, jogador, modos de jogo) e
+  as operações de movimento.
+
+pegapega.h
+  Contrato do mini-jogo Pega-Pega: estado (rodando/venceu/perdeu), tempo, capturas
+  e posição do alvo.
+
+input.h
+  Contrato do InputManager: o enum InputAction (sair, trocar tile, etc.) e as
+  funções que interpretam o teclado.
+
+hud.h
+  Contrato do Hud: desenhar texto na tela (placar e tempo).
+
+renderer.h
+  Contrato do Renderer: a classe central que junta tudo (mapa, personagem,
+  texturas e HUD) e desenha o quadro.
+
+------------------------------- src/ (.cpp) ------------------------------------
+
+main.cpp
+  Ponto de entrada. Inicializa GLFW/GLAD, cria a janela e roda o LOOP PRINCIPAL:
+  a cada quadro lê o teclado, atualiza a lógica e manda o Renderer desenhar.
+
+texture.cpp
+  Usa a biblioteca stb_image para ler o arquivo PNG e envia esses pixels para a
+  placa de vídeo como uma textura. Usamos filtro NEAREST de propósito, para manter
+  o visual em pixel art nítido, sem borrar.
+
+shader.cpp
+  Compila os shaders (os programinhas que rodam na GPU) e avisa com clareza se
+  algum erro de compilação acontecer.
+
+spritesheet.cpp
+  Sabe recortar um quadro específico de uma imagem (calcular as coordenadas de
+  textura) e montar os vértices daquele sprite para o desenho.
+
+tileset.cpp
+  Responde duas perguntas simples: "esse terreno é caminhável?" e "qual pedaço do
+  spritesheet corresponde a esse tile?".
+
+isogrid.cpp
+  Coração do visual isométrico: calcula a posição de cada tile na tela. As linhas
+  ímpares deslocam meio tile e cada linha desce só metade da altura — é o que cria
+  a profundidade staggered. Também centraliza o mapa na janela.
+
+maploader.cpp
+  Lê o arquivo de mapa em texto e valida tudo (cabeçalho, dimensões, índices). É o
+  que torna o jogo data-driven: dá para criar mapas novos sem recompilar.
+
+character.cpp
+  Cuida do personagem: escolhe a coluna do spritesheet conforme a direção em que
+  ele olha, alterna os quadros da animação "parado" e o posiciona em cima do tile.
+
+tilemap.cpp
+  A lógica do mapa. Decide se o jogador PODE se mover (consultando o terreno
+  caminhável), trata a paridade das linhas no movimento diagonal e guarda o modo
+  de jogo atual (Navegação, Puzzle, Pega-Pega).
+
+pegapega.cpp
+  As regras do mini-jogo: sorteia um tile caminhável para o alvo, conta capturas,
+  controla o tempo e decide vitória ou derrota.
+
+input.cpp
+  Interpreta o teclado: detecta as teclas seguradas, combina duas teclas numa
+  diagonal e trata as ações especiais (P, TAB, Y, ESC).
+
+hud.cpp
+  Desenha o texto do placar e do cronômetro na tela, usando a stb_easy_font.
+
+renderer.cpp
+  Junta todas as peças: carrega texturas, percorre o mapa montando o que será
+  desenhado (tiles + personagem + alvo) e faz o desenho final na ordem correta.
+
+================================================================================
+  SE A BANCA PERGUNTAR (respostas curtas)
+================================================================================
+- Por que spritesheet em vez de várias imagens? (Arthur) Carrega uma vez e recorta
+  o quadro na hora; vale para terrenos e para as poses do personagem.
+- Por que staggered e não diamante? (Arthur) Mantém o mapa como matriz simples; o
+  visual isométrico aparece só no desenho.
+- Como o personagem sabe onde pode andar? (Rodrigo) O arquivo do mapa marca os
+  terrenos caminháveis e checamos isso antes de cada passo.
+- Por que sem engine? (Miguel) O objetivo era entender o gráfico; cuidamos das
+  texturas, da projeção e do desenho manualmente.
+================================================================================

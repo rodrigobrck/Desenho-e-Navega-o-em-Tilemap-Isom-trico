@@ -1,3 +1,7 @@
+// spritesheet.h
+// Define SpriteSheet (uma imagem com varios quadros) e as structs de desenho
+// (SpriteVertex e DrawBatch). E a base de como recortamos e agrupamos os
+// sprites antes de envia-los para a GPU.
 #pragma once
 
 #include "texture.h"

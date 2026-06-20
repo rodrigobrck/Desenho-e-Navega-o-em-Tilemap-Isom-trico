@@ -1,3 +1,8 @@
+// pegapega.cpp
+// As regras do mini-jogo Pega-Pega: sorteia um tile caminhavel para o alvo,
+// conta as capturas, controla o tempo (cada captura da bonus) e decide vitoria
+// (ao atingir a meta) ou derrota (quando o tempo zera). Tambem monta o texto do
+// HUD.
 #include "pegapega.h"
 
 #include "tilemap.h"

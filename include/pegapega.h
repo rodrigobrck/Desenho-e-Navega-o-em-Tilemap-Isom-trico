@@ -1,3 +1,6 @@
+// pegapega.h
+// Contrato do mini-jogo Pega-Pega: guarda o estado (parado/rodando/venceu/
+// perdeu), o tempo restante, o numero de capturas e a posicao do alvo (NPC).
 #pragma once
 
 #include "character.h"

@@ -1,3 +1,7 @@
+// tileset.cpp
+// Implementa o TileSet. Responde duas perguntas simples: "esse terreno e
+// caminhavel?" e "qual pedaco do spritesheet corresponde a esse tile?". Tambem
+// devolve o nome de cada tipo de terreno (grama, agua, etc.).
 #include "tileset.h"
 
 void TileSet::setSheet(const SpriteSheet* sheet) {

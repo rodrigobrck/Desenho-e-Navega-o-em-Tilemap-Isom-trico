@@ -1,3 +1,6 @@
+// isogrid.h
+// Contrato do IsoGrid: a matematica que converte uma posicao de grade
+// (linha, coluna) na posicao correspondente na tela (x, y) do layout staggered.
 #pragma once
 
 struct IsoGrid {

@@ -1,3 +1,6 @@
+// maploader.h
+// Define a struct MapData (todos os dados de um mapa) e a funcao loadMapFile,
+// que le esses dados de um arquivo de texto em Assets/Maps.
 #pragma once
 
 #include <string>

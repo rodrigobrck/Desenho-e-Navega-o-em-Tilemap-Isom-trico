@@ -1,3 +1,7 @@
+// main.cpp
+// Ponto de entrada do programa. Inicializa GLFW e GLAD, cria a janela e o
+// contexto OpenGL e roda o LOOP PRINCIPAL: a cada quadro le o teclado, atualiza
+// a logica (movimento, modos, Pega-Pega) e manda o Renderer desenhar a cena.
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

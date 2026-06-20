@@ -1,3 +1,7 @@
+// character.h
+// Contrato do Character: a qual spritesheet ele pertence, para que direcao olha
+// e qual quadro de animacao mostrar. Serve tanto para o jogador quanto para o
+// NPC do Pega-Pega.
 #pragma once
 
 #include "types.h"

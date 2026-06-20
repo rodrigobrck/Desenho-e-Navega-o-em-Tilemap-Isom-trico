@@ -1,3 +1,8 @@
+// maploader.cpp
+// Le o arquivo de mapa em texto (cabecalho com tileset/tamanho, lista de tiles
+// caminhaveis, dimensoes e a grade de numeros) e valida tudo, reportando erros
+// claros. E o que torna o jogo data-driven: da para criar mapas novos sem
+// recompilar.
 #include "maploader.h"
 
 #include <cctype>

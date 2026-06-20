@@ -1,3 +1,7 @@
+// character.cpp
+// Implementa o personagem: escolhe a coluna do spritesheet conforme a direcao
+// em que ele olha, alterna os quadros da animacao "parado" e o posiciona em cima
+// do tile (centrado e com os pes apoiados).
 #include "character.h"
 
 namespace {

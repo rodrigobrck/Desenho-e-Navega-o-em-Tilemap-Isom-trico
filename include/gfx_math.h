@@ -1,3 +1,7 @@
+// gfx_math.h
+// Pequena funcao matematica que monta a matriz de projecao ortografica
+// (orthoMat4). E ela que mapeia o nosso espaco 2D para o intervalo que o OpenGL
+// espera para desenhar na tela.
 #pragma once
 
 #include <algorithm>

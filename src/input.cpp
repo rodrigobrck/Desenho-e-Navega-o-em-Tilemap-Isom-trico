@@ -1,3 +1,8 @@
+// input.cpp
+// Interpreta o teclado: registra quais teclas estao seguradas e quando, combina
+// duas teclas numa direcao diagonal (com uma pequena deadzone de tempo) e trata
+// as acoes especiais (P inicia o Pega-Pega, TAB cicla o tile, Y troca o modo,
+// ESC sai).
 #include "input.h"
 #include <GLFW/glfw3.h>
 #include <iostream>

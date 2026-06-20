@@ -1,3 +1,8 @@
+// tilemap.cpp
+// A logica do mapa. Decide se o jogador PODE se mover (consultando o terreno
+// caminhavel), trata a paridade das linhas no movimento diagonal staggered,
+// guarda o modo de jogo atual (Navegacao, Puzzle, Pega-Pega) e sorteia tiles
+// caminhaveis para o alvo.
 #include "tilemap.h"
 
 #include "screen.h"

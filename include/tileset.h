@@ -1,3 +1,6 @@
+// tileset.h
+// Contrato do TileSet: saber quais terrenos sao caminhaveis e onde cada tile
+// esta no spritesheet. Tambem da um nome a cada tipo de terreno.
 #pragma once
 
 #include "spritesheet.h"

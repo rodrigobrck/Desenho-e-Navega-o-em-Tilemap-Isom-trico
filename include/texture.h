@@ -1,3 +1,6 @@
+// texture.h
+// Contrato da classe Texture: carregar uma imagem e transforma-la numa textura
+// de GPU pronta para uso.
 #pragma once
 
 #include <glad/glad.h>

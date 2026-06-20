@@ -1,3 +1,7 @@
+// spritesheet.cpp
+// Implementa o SpriteSheet: calcula as coordenadas de textura de um quadro
+// especifico da imagem e monta os vertices daquele sprite. Tambem agrupa os
+// sprites por textura (addSpriteToBatches) e resolve o caminho dos assets.
 #include "spritesheet.h"
 
 #include <filesystem>

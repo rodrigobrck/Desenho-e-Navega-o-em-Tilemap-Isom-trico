@@ -1,3 +1,6 @@
+// renderer.h
+// Contrato do Renderer: a classe central que junta todas as pecas (mapa,
+// personagem, texturas e HUD), monta a geometria do quadro e a desenha na tela.
 #pragma once
 
 #include <glad/glad.h>

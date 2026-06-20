@@ -1,3 +1,7 @@
+// shader.cpp
+// Implementa a classe Shader: compila os shaders de vertice e de fragmento,
+// liga-os num programa de GPU e avisa com clareza caso ocorra erro de
+// compilacao. Tambem oferece atalhos para enviar uniforms (matrizes, etc.).
 #include "shader.h"
 
 #include <iostream>

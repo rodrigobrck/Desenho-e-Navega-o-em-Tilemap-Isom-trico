@@ -1,3 +1,6 @@
+// shader.h
+// Contrato da classe Shader: compilar e usar os programas de shader do OpenGL
+// (os programinhas que rodam na GPU).
 #pragma once
 
 #include <glad/glad.h>

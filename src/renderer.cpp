@@ -1,3 +1,8 @@
+// renderer.cpp
+// Junta todas as pecas do desenho. Carrega o tileset e o personagem, define os
+// shaders, percorre o mapa montando a geometria do quadro (tiles + personagem +
+// alvo) na ordem de profundidade correta (algoritmo do pintor) e faz o desenho
+// final, alem de ajustar a camera para enquadrar o mapa na janela.
 #include "renderer.h"
 
 #include "gfx_math.h"

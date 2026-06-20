@@ -1,3 +1,7 @@
+// texture.cpp
+// Implementa a classe Texture. Usa a biblioteca stb_image para ler o arquivo PNG
+// e envia esses pixels para a GPU como uma textura. Usamos filtro NEAREST de
+// proposito, para manter o visual em pixel art nitido, sem borrar.
 #include "texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
