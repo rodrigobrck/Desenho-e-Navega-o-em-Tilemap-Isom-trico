@@ -17,20 +17,27 @@
 
 class Renderer {
 public:
+    // Spritesheets (tiles e personagem), o mapa e o HUD.
     SpriteSheet tileSheet;
     SpriteSheet character;
 
     Tilemap map;
     Hud hud;
 
+    // Inicializa tudo (shaders, recursos, buffers) a partir de um arquivo de mapa.
     bool init(const std::string& mapFile);
+    // Informa o mini-jogo Pega-Pega (para desenhar o alvo).
     void setPegaPega(const PegaPega* pega);
+    // Atualiza o tamanho da janela usado no enquadramento.
     void setViewport(int width, int height);
+    // Reconstroi a geometria do quadro (chamar apos qualquer mudanca visivel).
     void uploadMesh();
+    // Desenha um quadro completo na tela.
     void draw();
     ~Renderer();
 
 private:
+    // Monta os batches de sprites na ordem de profundidade correta.
     void buildBatches();
 
     GLuint vao_ = 0;

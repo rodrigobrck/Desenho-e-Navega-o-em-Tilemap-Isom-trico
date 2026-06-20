@@ -7,6 +7,7 @@
 
 #include <vector>
 
+// Onde encontrar o sprite de um tile: o spritesheet e o quadro (col, row).
 struct TileSpriteRef {
     const SpriteSheet* sheet = nullptr;
     int col = 0;
@@ -15,11 +16,14 @@ struct TileSpriteRef {
 
 class TileSet {
 public:
+    // Define o spritesheet dos tiles e a mascara de quais sao caminhaveis.
     void setSheet(const SpriteSheet* sheet);
     void setWalkable(const std::vector<bool>& mask);
 
+    // Recorte do spritesheet correspondente a um id de tile.
     TileSpriteRef spriteRef(int tileId) const;
 
+    // O tile e caminhavel? E qual o nome do seu terreno.
     bool isWalkable(int tileId) const;
     static const char* name(int tileId);
 

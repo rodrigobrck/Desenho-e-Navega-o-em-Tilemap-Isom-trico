@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+// Todos os dados de um mapa lidos do arquivo: nome do tileset, quantidade e
+// tamanho dos tiles, dimensoes da grade, os tiles em si e a mascara de caminhaveis.
 struct MapData {
     std::string tilesetName;
     int tileCount = 0;
@@ -17,4 +19,5 @@ struct MapData {
     std::vector<bool> walkable;
 };
 
+// Le e valida um arquivo de mapa, preenchendo 'out'; devolve 'false' em caso de erro.
 bool loadMapFile(const std::string& path, MapData& out);

@@ -6,7 +6,10 @@
 
 #include <algorithm>
 
+// Monta uma matriz de projecao ortografica 4x4 (em ordem por coluna) que mapeia o
+// retangulo [left, right] x [bottom, top] para o cubo de recorte do OpenGL.
 inline void orthoMat4(float left, float right, float bottom, float top, float out[16]) {
+    // Zera tudo e preenche so as posicoes usadas: escala na diagonal e translacao.
     std::fill(out, out + 16, 0.0f);
     out[0]  = 2.0f / (right - left);
     out[5]  = 2.0f / (top - bottom);
