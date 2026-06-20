@@ -1,6 +1,6 @@
 #pragma once
 
-#include "direction.h"
+#include "types.h"
 #include "spritesheet.h"
 
 class Character {

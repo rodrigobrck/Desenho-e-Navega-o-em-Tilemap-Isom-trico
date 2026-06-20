@@ -1,7 +1,7 @@
 #pragma once
 
 #include "character.h"
-#include "direction.h"
+#include "types.h"
 #include "isogrid.h"
 #include "maploader.h"
 #include "spritesheet.h"

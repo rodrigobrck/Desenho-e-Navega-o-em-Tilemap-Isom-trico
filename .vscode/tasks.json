@@ -28,7 +28,7 @@
         "src/debug_text.cpp",
         "external/glad/src/glad.c",
         "-I",
-        "src",
+        "include",
         "-I",
         "external/glad/include",
         "-I",

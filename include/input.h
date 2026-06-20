@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "direction.h"
+#include "types.h"
 
 enum class InputAction {
     None,

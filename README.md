@@ -95,7 +95,7 @@ Mapeamento dos tiles do mapa (0 a 6):
 
 ## Projeção e desenho
 
-- Projeção **ortográfica paralela** com janela de **1280×720** (1 unidade = 1 pixel; ver `src/screen.h`).
+- Projeção **ortográfica paralela** com janela de **1280×720** (1 unidade = 1 pixel; ver `include/screen.h`).
 - Layout **staggered**: linhas ímpares deslocam meio tile na horizontal.
 - Ordem de desenho **back-to-front** (painter's algorithm) por `row + col`.
 - **Zoom automático**: se o mapa for maior que a janela, a projeção do mundo é reduzida para enquadrá-lo por completo (o HUD permanece em tamanho fixo).
