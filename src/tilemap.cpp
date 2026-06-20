@@ -96,11 +96,6 @@ const char* Tilemap::blockedReason(Direction dir) const {
     return nullptr;
 }
 
-void Tilemap::toggleMode() {
-    if (mode_ == GameMode::Editor) mode_ = GameMode::Puzzle;
-    else if (mode_ == GameMode::Puzzle) mode_ = GameMode::Editor;
-}
-
 void Tilemap::setGameMode(GameMode m) {
     mode_ = m;
 }
@@ -120,14 +115,6 @@ void Tilemap::visitTile(int row, int col) {
 void Tilemap::cycleTile() {
     int& tile = at(player.row, player.col);
     tile = (tile + 1) % tileCount;
-}
-
-void Tilemap::changeTile(int delta) {
-    int& tile = at(player.row, player.col);
-    int val = tile + delta;
-    val %= tileCount;
-    if (val < 0) val += tileCount;
-    tile = val;
 }
 
 GridPos Tilemap::randomWalkableTile(GridPos exclude) const {

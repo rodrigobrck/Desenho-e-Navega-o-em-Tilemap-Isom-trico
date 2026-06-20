@@ -44,12 +44,10 @@ public:
     const char* blockedReason(Direction dir) const;
 
     void cycleTile();
-    void toggleMode();
-    enum class GameMode { Navigation, Editor, Puzzle, PegaPega };
+    enum class GameMode { Navigation, Puzzle, PegaPega };
     void setGameMode(GameMode m);
     GameMode gameMode() const;
     void visitTile(int row, int col);
-    void changeTile(int delta);
 
     GridPos randomWalkableTile(GridPos exclude) const;
 

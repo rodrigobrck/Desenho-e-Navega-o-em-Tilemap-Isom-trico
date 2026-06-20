@@ -8,10 +8,7 @@ enum class InputAction {
     Quit,
     CycleTile,
     ToggleMode,
-    ToggleSubmode,
-    StartPegaPega,
-    EditorNext,
-    EditorPrev
+    StartPegaPega
 };
 
 class InputManager {
