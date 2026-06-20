@@ -40,8 +40,8 @@ g++ -std=c++17 -static -static-libgcc -static-libstdc++ `
 O programa renderiza um **mapa isométrico no layout *staggered*** (as linhas ímpares deslocam meio tile na horizontal) usando OpenGL moderno. O personagem se movimenta em **8 direções** sobre o mapa, e a aplicação possui diferentes modos de uso:
 
 - **Navegação:** mova o personagem pelo mapa (apenas tiles caminháveis).
-- **Puzzle:** percorra/marque os tiles do mapa.
-- **Pega-Pega:** um NPC aparece em um tile aleatório e o objetivo é capturá-lo dentro do tempo, com um **HUD** mostrando o cronômetro e o número de capturas.
+- **Puzzle:** os tiles mudam enquanto o jogar caminha pelo mapa. Ainda não há um objetivo claro nesse modo, a não ser mostrar o entendimento sobre o tileset.
+- **Pega-Pega:** um NPC aparece em um tile aleatório e o objetivo é capturá-lo dentro do tempo, com um **HUD** mostrando o cronômetro e o número de capturas. Cada captura adiciona 2 seguntos ao timer, ao chegar em 10 capturas, o jogador ganha, se o timer zerar, o jogador perde.
 
 Os mapas são **lidos de arquivos de configuração** em `Assets/Maps/`, definindo o tileset, a quantidade e o tamanho dos tiles, quais são caminháveis e a grade em si — então é possível criar novos mapas sem recompilar.
 
