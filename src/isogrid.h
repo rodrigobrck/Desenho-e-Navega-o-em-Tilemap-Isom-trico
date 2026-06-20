@@ -13,4 +13,7 @@ struct IsoGrid {
     float mapWidth() const;
     float mapHeight() const;
     void tileScreenPos(int row, int col, float& x, float& y) const;
+
+private:
+    void bounds(float& minX, float& minY, float& maxX, float& maxY) const;
 };

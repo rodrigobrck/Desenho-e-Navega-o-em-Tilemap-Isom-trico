@@ -2,61 +2,52 @@
 
 #include <limits>
 
-float IsoGrid::offsetX() const {
+namespace {
+constexpr float VERTICAL_PADDING = 20.0f;
+}
+
+void IsoGrid::bounds(float& minX, float& minY, float& maxX, float& maxY) const {
     const float halfW = tileW * 0.5f;
-    float minX = std::numeric_limits<float>::infinity();
-    float maxX = -std::numeric_limits<float>::infinity();
+    const float halfH = tileH * 0.5f;
+
+    minX = minY = std::numeric_limits<float>::infinity();
+    maxX = maxY = -std::numeric_limits<float>::infinity();
+
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
             const float x = c * tileW + (r % 2) * halfW;
+            const float y = r * halfH;
             if (x < minX) minX = x;
             if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
         }
     }
+}
+
+float IsoGrid::offsetX() const {
+    float minX, minY, maxX, maxY;
+    bounds(minX, minY, maxX, maxY);
     const float mapW = (maxX - minX) + static_cast<float>(tileW);
     return (screenW - mapW) * 0.5f - minX;
 }
 
 float IsoGrid::offsetY() const {
-    const float halfH = tileH * 0.5f;
-    float minY = std::numeric_limits<float>::infinity();
-    float maxY = -std::numeric_limits<float>::infinity();
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < cols; ++c) {
-            const float y = r * halfH;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-        }
-    }
+    float minX, minY, maxX, maxY;
+    bounds(minX, minY, maxX, maxY);
     const float mapH = (maxY - minY) + static_cast<float>(tileH);
-    return (screenH - mapH) * 0.5f - minY + 20.0f;
+    return (screenH - mapH) * 0.5f - minY + VERTICAL_PADDING;
 }
 
 float IsoGrid::mapWidth() const {
-    const float halfW = tileW * 0.5f;
-    float minX = std::numeric_limits<float>::infinity();
-    float maxX = -std::numeric_limits<float>::infinity();
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < cols; ++c) {
-            const float x = c * tileW + (r % 2) * halfW;
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-        }
-    }
+    float minX, minY, maxX, maxY;
+    bounds(minX, minY, maxX, maxY);
     return (maxX - minX) + static_cast<float>(tileW);
 }
 
 float IsoGrid::mapHeight() const {
-    const float halfH = tileH * 0.5f;
-    float minY = std::numeric_limits<float>::infinity();
-    float maxY = -std::numeric_limits<float>::infinity();
-    for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < cols; ++c) {
-            const float y = r * halfH;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-        }
-    }
+    float minX, minY, maxX, maxY;
+    bounds(minX, minY, maxX, maxY);
     return (maxY - minY) + static_cast<float>(tileH);
 }
 

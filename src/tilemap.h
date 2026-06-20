@@ -16,10 +16,10 @@ public:
     static constexpr int TILE_W = 64;
     static constexpr int TILE_H = 32;
 
-    int rows = 3;
-    int cols = 3;
+    int rows = 0;
+    int cols = 0;
     std::vector<int> map;
-    GridPos player{1, 1};
+    GridPos player{0, 0};
     Character character;
     TileSet tileset;
 

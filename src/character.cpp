@@ -2,6 +2,7 @@
 
 namespace {
 constexpr float CHAR_SCALE = 1.5f;
+constexpr float FOOT_PADDING = 2.0f;
 }
 
 void Character::setSheet(const SpriteSheet* sheet) {
@@ -53,6 +54,6 @@ void Character::appendSprite(std::vector<DrawBatch>& batches,
     const float w = static_cast<float>(sheet_->tileW) * CHAR_SCALE;
     const float h = static_cast<float>(sheet_->tileH) * CHAR_SCALE;
     const float x = tileX + (tileW - w) * 0.5f;
-    const float y = tileY + tileH - h - 2.0f;
+    const float y = tileY + tileH - h - FOOT_PADDING;
     addSpriteToBatches(batches, sheet_, x, y, col, row, CHAR_SCALE, CHAR_SCALE);
 }

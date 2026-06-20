@@ -9,16 +9,19 @@
 
 namespace {
 
-void framebufferSizeCallback(GLFWwindow*, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
 struct AppState {
     Renderer* renderer = nullptr;
-    bool movedThisFrame = false;
     InputManager input;
     PegaPega pega;
 };
+
+void framebufferSizeCallback(GLFWwindow* win, int width, int height) {
+    glViewport(0, 0, width, height);
+    auto* app = static_cast<AppState*>(glfwGetWindowUserPointer(win));
+    if (app != nullptr && app->renderer != nullptr) {
+        app->renderer->setViewport(width, height);
+    }
+}
 
 }
 
@@ -73,6 +76,10 @@ int main(int argc, char** argv) {
     appState.renderer = &renderer;
     renderer.setPegaPega(&appState.pega);
     glfwSetWindowUserPointer(window, &appState);
+
+    int fbWidth, fbHeight;
+    glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+    renderer.setViewport(fbWidth, fbHeight);
 
     glfwSetKeyCallback(window, [](GLFWwindow* win, int key, int scancode, int action, int mods) {
         auto* app = static_cast<AppState*>(glfwGetWindowUserPointer(win));
@@ -141,8 +148,6 @@ int main(int argc, char** argv) {
     double lastTime = glfwGetTime();
     double lastIdleTime = lastTime;
     while (!glfwWindowShouldClose(window)) {
-        appState.movedThisFrame = false;
-
         const double now = glfwGetTime();
         const double dt = now - lastTime;
         lastTime = now;
@@ -164,25 +169,22 @@ int main(int argc, char** argv) {
         Direction chosen;
         if (renderer.map.gameMode() != Tilemap::GameMode::Editor) {
             if (appState.input.pickMovement(chosen, DEADZONE)) {
-                if (!appState.movedThisFrame) {
-                    if (renderer.map.move(chosen)) {
-                        appState.movedThisFrame = true;
-                        if (renderer.map.gameMode() == Tilemap::GameMode::Puzzle) {
-                            renderer.map.visitTile(renderer.map.player.row, renderer.map.player.col);
-                        }
-                        if (appState.pega.onPlayerMoved(renderer.map)) {
-                            const PegaPega& pega = appState.pega;
-                            if (pega.status() == PegaPega::Status::Won) {
-                                std::cout << "Pega-Pega: voce venceu com " << pega.catches() << " capturas!\n";
-                            } else {
-                                std::cout << "Pega-Pega: capturas " << pega.catches() << "/" << PegaPega::GOAL
-                                          << " | tempo " << pega.timeLeft() << "s\n";
-                            }
-                        }
-                        renderer.uploadMesh();
-                    } else if (const char* reason = renderer.map.blockedReason(chosen)) {
-                        std::cout << "Bloqueado: terreno nao e caminhavel.\n";
+                if (renderer.map.move(chosen)) {
+                    if (renderer.map.gameMode() == Tilemap::GameMode::Puzzle) {
+                        renderer.map.visitTile(renderer.map.player.row, renderer.map.player.col);
                     }
+                    if (appState.pega.onPlayerMoved(renderer.map)) {
+                        const PegaPega& pega = appState.pega;
+                        if (pega.status() == PegaPega::Status::Won) {
+                            std::cout << "Pega-Pega: voce venceu com " << pega.catches() << " capturas!\n";
+                        } else {
+                            std::cout << "Pega-Pega: capturas " << pega.catches() << "/" << PegaPega::GOAL
+                                      << " | tempo " << pega.timeLeft() << "s\n";
+                        }
+                    }
+                    renderer.uploadMesh();
+                } else if (renderer.map.blockedReason(chosen)) {
+                    std::cout << "Bloqueado: terreno nao e caminhavel.\n";
                 }
             }
         }

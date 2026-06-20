@@ -104,8 +104,9 @@ static void appendText(float x, float y, const char* text,
 }
 
 void DebugText::buildTileLabels(const Tilemap& map) {
+    constexpr int EST_VERTS_PER_TILE = 200;
     std::vector<ColorVertex> vertices;
-    vertices.reserve(static_cast<size_t>(map.rows * map.cols * 200));
+    vertices.reserve(static_cast<size_t>(map.rows * map.cols * EST_VERTS_PER_TILE));
 
     char label[64];
 

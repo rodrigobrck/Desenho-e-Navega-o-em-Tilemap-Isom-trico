@@ -7,6 +7,11 @@
 #include <utility>
 
 namespace {
+constexpr int CHAR_SHEET_COLS = 8;
+constexpr int CHAR_SHEET_ROWS = 12;
+constexpr int CHAR_CELL_W = 16;
+constexpr int CHAR_CELL_H = 24;
+
 const char* VERTEX_SHADER = R"(
 #version 330 core
 layout(location = 0) in vec2 aPos;
@@ -46,13 +51,17 @@ bool Renderer::init(const std::string& mapFile) {
         return false;
     }
 
-    if (!character.load("Character/Small-8-Direction-Characters_by_AxulArt.png", 8, 12, 16, 24)) {
+    if (!character.load("Character/Small-8-Direction-Characters_by_AxulArt.png",
+                        CHAR_SHEET_COLS, CHAR_SHEET_ROWS, CHAR_CELL_W, CHAR_CELL_H)) {
         std::cerr << "Failed to load character sprite sheet.\n";
         return false;
     }
     map.character.setSheet(&character);
 
-    map.loadFromFile(resolveAssetPath(std::string("Maps/") + mapFile));
+    if (!map.loadFromFile(resolveAssetPath(std::string("Maps/") + mapFile))) {
+        std::cerr << "Failed to load map '" << mapFile << "'.\n";
+        return false;
+    }
 
     if (!tileSheet.loadAuto("Tiles/" + map.tilesetName, map.tileSrcW, map.tileSrcH)) {
         std::cerr << "Failed to load tileset '" << map.tilesetName << "' declared in the map.\n";
@@ -93,6 +102,11 @@ bool Renderer::init(const std::string& mapFile) {
 
 void Renderer::setPegaPega(const PegaPega* pega) {
     pega_ = pega;
+}
+
+void Renderer::setViewport(int width, int height) {
+    viewportW_ = std::max(width, 1);
+    viewportH_ = std::max(height, 1);
 }
 
 void Renderer::buildBatches() {
@@ -153,17 +167,29 @@ void Renderer::draw() {
     const float fit = std::max(mapW / SCREEN_W, mapH / SCREEN_H) * margin;
     const float zoom = std::max(fit, 1.0f);
 
+    const float contentW = SCREEN_W * zoom;
+    const float contentH = SCREEN_H * zoom;
+    const float contentAspect = contentW / contentH;
+    const float windowAspect = static_cast<float>(viewportW_) / static_cast<float>(viewportH_);
+
+    float regionW = contentW;
+    float regionH = contentH;
+    if (windowAspect > contentAspect) {
+        regionW = contentH * windowAspect;
+    } else {
+        regionH = contentW / windowAspect;
+    }
+
     const float cx = SCREEN_W * 0.5f;
     const float cy = SCREEN_H * 0.5f;
-    const float halfW = SCREEN_W * 0.5f * zoom;
-    const float halfH = SCREEN_H * 0.5f * zoom;
 
     float worldProj[16];
-    orthoMat4(cx - halfW, cx + halfW, cy + halfH, cy - halfH, worldProj);
+    orthoMat4(cx - regionW * 0.5f, cx + regionW * 0.5f,
+              cy + regionH * 0.5f, cy - regionH * 0.5f, worldProj);
 
     float screenProj[16];
-    orthoMat4(0.0f, static_cast<float>(SCREEN_W),
-              static_cast<float>(SCREEN_H), 0.0f, screenProj);
+    orthoMat4(0.0f, static_cast<float>(viewportW_),
+              static_cast<float>(viewportH_), 0.0f, screenProj);
 
     shader_.use();
     shader_.setMat4("uProjection", worldProj);
